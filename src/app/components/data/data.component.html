@@ -1,0 +1,114 @@
+<h4>Formularios <small>DATA</small></h4>
+<hr>
+<form [formGroup]="forma" (ngSubmit)="guardarCambios()">
+
+  <div>
+
+    <div class="form-group row">
+      <label class="col-2 col-form-label">Nombre</label>
+      <div class="col-8">
+
+        <input class="form-control"
+               type="text"
+               placeholder="Nombre"
+               formControlName="nombre"
+               [ngClass]="{ 'is-invalid': (forma.controls['nombre'].errors?.required || forma.controls['nombre'].errors?.minlength) && forma.controls['nombre'].touched, 'is-valid':!forma.controls['nombre'].errors?.required || !forma.controls['nombre'].errors?.minlength }">
+
+        <div *ngIf="forma.controls['nombre'].errors?.required">
+            El nombre es necesario
+        </div>
+
+        <div *ngIf="forma.controls['nombre'].errors?.minlength">
+            Debe ser mayor a {{forma.controls['nombre'].errors?.minlength.requiredLength}}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-2 col-form-label">Apellido</label>
+      <div class="col-8">
+
+        <input class="form-control"
+               type="text"
+               placeholder="Apellido"
+               formControlName="apellido">
+      </div>
+    </div>
+
+  
+
+    <div formGroupName="direccion">
+      <div  class="form-group row">
+          <label class="col-2 col-form-label">Direccion</label>
+          <div class="col-8">
+              <div class="row">
+                  <div class="col-2">
+                    <input class="form-control"
+                    type="text"
+                    placeholder="Calle"
+                    formControlName="calle"
+                    [ngClass]="{ 'is-invalid': (forma.get('direccion.calle').errors?.required) && forma.get('direccion.calle').touched, 'is-valid':!forma.get('direccion.calle').errors?.required }">
+                  </div>
+                  <div class="col-2">
+                      <input class="form-control"
+                      type="text"
+                      placeholder="Carrera"
+                      formControlName="carrera">
+                  </div>
+                  <div class="col-2">
+                      <input class="form-control"
+                      type="text"
+                      placeholder="Número"
+                      formControlName="numeroCasa">
+                  </div>
+                  <div class="col-3">
+                      <input class="form-control"
+                      type="text"
+                      placeholder="Localidad"
+                      formControlName="localidad">
+                  </div>
+                  <div class="col-3">
+                    <input class="form-control"
+                    type="text"
+                    placeholder="Barrio"
+                    formControlName="barrio">
+                  </div>
+                </div>
+          </div>
+          
+      </div>
+        
+
+    </div>
+  </div>
+  <div class="form-group row">
+    <label class="col-2 col-form-label">Correo</label>
+    <div class="col-md-8">
+
+      <input class="form-control"
+             type="email"
+             placeholder="Correo electrónico"
+             formControlName="email">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-2 col-form-label">Pasatiempos</label>
+    <div class="col-md-8" formArrayName="pasatiempos">
+
+      <input formControlName="0"
+      type="text" name="" class="form-control">
+
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-2 col-form-label">&nbsp;</label>
+    <div class="input-group col-md-8">
+      <button type="submit" class="btn btn-outline-primary">
+        Guardar
+      </button>
+    </div>
+  </div>
+{{forma.valid}}
+</form>
