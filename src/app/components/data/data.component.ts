@@ -21,7 +21,7 @@ export class DataComponent {
       localidad:"Puente Aranda",
       barrio:"Pradera"
     },
-    // pasatiempos: [ "Correr", "Dormir", "Comer"]
+     pasatiempos: []
   }
 
   usuarioVacio:Object = {
@@ -61,7 +61,7 @@ export class DataComponent {
     });
 
     //Carga los valores que tengan una misma estructura del objeto
-    this.forma.setValue(this.usuario);
+    // this.forma.setValue(this.usuario);
    }
 
    guardarCambios(){
