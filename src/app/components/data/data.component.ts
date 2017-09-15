@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from "@angular/forms";
+import { Observable } from "rxjs/Rx";
+
 
 @Component({
   selector: 'app-data',
@@ -44,10 +46,13 @@ export class DataComponent {
     this.forma = new FormGroup({
       'nombre': new FormControl('', [Validators.required,
                                      Validators.minLength(3)]),
-      'apellido': new FormControl('', Validators.required),
+      'apellido': new FormControl('', [Validators.required, this.noRomero]),
       'email': new FormControl('', [
                                 Validators.required, 
                                 Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]),
+      'username': new FormControl('', Validators.required, this.existeUsuario),                                
+      'password1': new FormControl('', Validators.required),
+      'password2': new FormControl(),                                
       'direccion': new FormGroup({
         'calle': new FormControl('', Validators.required),
         'carrera': new FormControl('',Validators.required),
@@ -62,11 +67,85 @@ export class DataComponent {
 
     //Carga los valores que tengan una misma estructura del objeto
     // this.forma.setValue(this.usuario);
+
+    //Otra forma de agregar validaciones personalizadas
+    //El bind es utilizado para asignar la forma ya que en javascript esto es otro contesto 
+    //noIgual donde this se convierte en la forma para agregarlo al contesto de la funcion
+
+    this.forma.controls['password2'].setValidators([
+  
+      Validators.required, this.noIgual.bind(this.forma)
+    ])
+
+    //esto escucha TODOS los cambios relizados en el form
+    // this.forma.valueChanges.subscribe(
+    //   data=>{
+    //     console.log(data);
+    //   });
+
+    //Esto escucha solo un objeto del form, ejemplo username
+    this.forma.controls['username'].valueChanges.subscribe(
+      data=>{
+        console.log(data);
+      });
+
+    //Esto escucha el status del objeto del form, ejemplo username
+    this.forma.controls['username'].statusChanges.subscribe(
+      data=>{
+        console.log(data);
+      });
+
    }
 
    guardarCambios(){
-     this.forma.reset(this.usuarioVacio);
+    //  this.forma.reset(this.usuarioVacio);
+     console.log(this.forma);
 
+   }
+
+   agregarPasatiempo(){
+     ( <FormArray>this.forma.controls['pasatiempos']).push(
+       new FormControl("", Validators.required)
+     )
+   }
+
+   
+   //Validaciones de Controles
+   noRomero(control:FormControl): {[s:string]:boolean}{
+    if(control.value === "romero"){
+      return {
+        noRomero:true
+      }
+    }
+    return null;
+   }
+
+   noIgual(control:FormControl): {[s:string]:boolean}{
+     let forma:any = this;
+    if(control.value !== forma.controls['password1'].value){
+      return {
+        noigual:true
+      }
+    }
+    return null;
+   }
+
+   //Validacion asincrona
+
+   existeUsuario(control:FormControl): Promise<any> | Observable<any>{
+
+    let promesa = new Promise(
+      (resolve,reject) =>{
+        setTimeout(function() {
+          if(control.value === 'lromero'){
+            resolve({existe:true})
+          }else{
+            resolve(null);
+          }
+        }, 3000);
+      }
+    )
+    return promesa;
    }
 
 
